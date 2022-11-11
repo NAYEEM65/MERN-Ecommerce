@@ -1,13 +1,15 @@
 const Product = require('../models/productModel');
 
+const catchAsyncErrors = require('../middleware/cacthAsyncError');
+
 //create a new Product -- admin only
-exports.createProduct = async (req, res, next) => {
+exports.createProduct = catchAsyncErrors(async (req, res, next) => {
     const product = await Product.create(req.body);
     res.status(201).json({
         success: true,
         product,
     });
-};
+});
 //update a new Product -- admin only
 exports.updateProduct = async (req, res, next) => {
     let product = await Product.findById(req.params.id);
@@ -47,20 +49,21 @@ exports.deleteProduct = async (req, res) => {
 };
 
 //get product details
-exports.getProductDetails = async (req, res) => {
+exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
+
     if (!product) {
         return res.status(500).json({
             success: false,
             message: 'Product not found',
         });
-    } else {
-        res.status(200).json({
-            success: true,
-            product,
-        });
     }
-};
+
+    res.status(200).json({
+        success: true,
+        product,
+    });
+});
 
 //get All Products
 exports.getAllProducts = async (req, res) => {
