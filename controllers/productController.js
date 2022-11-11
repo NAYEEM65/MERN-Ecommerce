@@ -22,7 +22,7 @@ exports.updateProduct = async (req, res, next) => {
         runValidators: true,
         useFindAndModify: false,
     });
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         product,
     });
@@ -39,9 +39,25 @@ exports.deleteProduct = async (req, res) => {
         });
     } else {
         await product.remove();
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: 'product deleted successfully',
+        });
+    }
+};
+
+//get product details
+exports.getProductDetails = async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+        return res.status(500).json({
+            success: false,
+            message: 'Product not found',
+        });
+    } else {
+        res.status(200).json({
+            success: true,
+            product,
         });
     }
 };
