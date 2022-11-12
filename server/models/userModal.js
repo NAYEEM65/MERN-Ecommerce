@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        maxLength: [30, 'name can not exceed 30 characters'],
-        minLenght: [4, 'name should be more than 4 characters'],
+        maxlength: [30, 'name can not exceed 30 characters'],
+        minlenght: [4, 'name should be more than 4 characters'],
     },
     email: {
         type: String,
@@ -17,8 +18,8 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        maxLength: [50, 'password can not exceed 50 characters'],
-        minLenght: [6, 'password should be more than 6 characters'],
+        maxlength: [50, 'password can not exceed 50 characters'],
+        minlength: [6, 'password should be more than 6 characters'],
         select: false,
     },
     avatar: {
@@ -37,6 +38,12 @@ const userSchema = new mongoose.Schema({
     },
     resetPasswordToken: String,
     resetPasswordTokenExpires: Date,
+});
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        next();
+    }
+    this.password = await bcrypt.hash(this.password, 10);
 });
 
 module.exports = mongoose.model('User', userSchema);
