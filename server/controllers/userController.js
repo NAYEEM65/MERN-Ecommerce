@@ -40,6 +40,19 @@ exports.loginUser = cacthAsyncError(async (req, res, next) => {
     sendToken(user, 201, res);
 });
 
+//logout user
+
+exports.logOut = cacthAsyncError(async (req, res, next) => {
+    res.cookie('token', null, {
+        expiresIn: new Date(Date.now()),
+        httpOnly: true,
+    });
+    res.status(200).json({
+        success: true,
+        message: 'Logged out successfully',
+    });
+});
+
 exports.getAllUsers = cacthAsyncError(async (req, res, next) => {
     const users = await User.find();
     res.status(200).json({
