@@ -2,6 +2,7 @@ const ErrorHandler = require('../utils/erroHandler');
 const cacthAsyncError = require('../middleware/cacthAsyncError');
 
 const User = require('../models/userModal');
+const sendToken = require('../utils/jwtToken');
 
 exports.registerUser = cacthAsyncError(async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -36,11 +37,7 @@ exports.loginUser = cacthAsyncError(async (req, res, next) => {
     if (!isPasswordMatch) {
         return next(new ErrorHandler('Invalid email or password', 401));
     }
-    const token = user.getJWTToken();
-    res.status(201).json({
-        success: true,
-        token,
-    });
+    sendToken(user, 201, res);
 });
 
 exports.getAllUsers = cacthAsyncError(async (req, res, next) => {
