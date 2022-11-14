@@ -112,9 +112,7 @@ exports.resetPassword = cacthAsyncError(async (req, res, next) => {
     }
 
     if (req.body.password !== req.body.confirmPassword) {
-        return next(ErrorHandler('password does not match', 400));
-
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: 'password does not match',
         });
@@ -145,5 +143,121 @@ exports.getUserDetails = cacthAsyncError(async (req, res, next) => {
     res.status(200).json({
         success: true,
         user,
+    });
+});
+// update User password
+exports.updatePassword = cacthAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('+password');
+
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+    if (!isPasswordMatched) {
+        return next(new ErrorHandler('Old password is incorrect', 400));
+    }
+
+    if (req.body.newPassword !== req.body.confirmPassword) {
+        return next(new ErrorHandler('password does not match', 400));
+    }
+
+    user.password = req.body.newPassword;
+
+    await user.save();
+
+    sendToken(user, 200, res);
+});
+
+// update User Profile
+exports.updateProfile = cacthAsyncError(async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email,
+    };
+
+    if (req.body.avatar !== '') {
+        const user = await User.findById(req.user.id);
+
+        const imageId = user.avatar.public_id;
+
+        await cloudinary.v2.uploader.destroy(imageId);
+
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: 'avatars',
+            width: 150,
+            crop: 'scale',
+        });
+
+        newUserData.avatar = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+        };
+    }
+
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+    });
+
+    res.status(200).json({
+        success: true,
+        user,
+    });
+});
+
+// Get single user (admin)
+exports.getSingleUser = cacthAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return res.status(400).json({
+            success: false,
+            message: `User does not exist with Id: ${req.params.id}`,
+        });
+    }
+    res.status(200).json({
+        success: true,
+        user,
+    });
+});
+
+// update User Role -- Admin
+exports.updateUserRole = cacthAsyncError(async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email,
+        role: req.body.role,
+    };
+
+    await User.findByIdAndUpdate(req.params.id, newUserData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+    });
+
+    res.status(200).json({
+        success: true,
+    });
+});
+
+// Delete User --Admin
+exports.deleteUser = cacthAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return res.status(400).json({
+            success: false,
+            message: `User does not exist with Id: ${req.params.id}`,
+        });
+    }
+
+    // const imageId = user.avatar.public_id;
+
+    // await cloudinary.v2.uploader.destroy(imageId);
+
+    await user.remove();
+
+    res.status(200).json({
+        success: true,
+        message: 'User Deleted Successfully',
     });
 });
