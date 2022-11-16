@@ -1,5 +1,10 @@
 const express = require('express');
 const {
+    getProductReviews,
+    deleteReview,
+    createProductReview,
+} = require('../controllers/productController');
+const {
     registerUser,
     getAllUsers,
     loginUser,
@@ -26,5 +31,8 @@ router.route('/logout').get(logOut);
 router.route('/forgot-password').post(forgotPassword);
 router.route('/reset-password/:token').put(resetPassword);
 router.route('/update-password').put(isAuthenticatedUser, updatePassword);
+router.route('/review').put(isAuthenticatedUser, createProductReview);
+router.route('/reviews').get(getProductReviews);
+router.route('/reviews').delete(isAuthenticatedUser, deleteReview);
 
 module.exports = router;
