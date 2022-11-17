@@ -4,27 +4,27 @@ const orderSchema = mongoose.Schema({
     shippingInfo: {
         address: {
             type: String,
-            required,
+            required: true,
         },
         city: {
             type: String,
-            required,
+            required: true,
         },
         state: {
             type: String,
-            required,
+            required: true,
         },
         country: {
             type: String,
-            required,
+            required: true,
         },
         pinCode: {
             type: Number,
-            required,
+            required: true,
         },
         phoneNumber: {
             type: Number,
-            required,
+            required: true,
         },
     },
 
@@ -32,68 +32,67 @@ const orderSchema = mongoose.Schema({
         {
             name: {
                 type: String,
-                required,
+                required: true,
             },
             price: {
                 type: Number,
-                required,
+                required: true,
             },
             quantity: {
                 type: Number,
-                required,
+                required: true,
             },
             image: {
                 type: String,
-                required,
+                required: true,
             },
             product: {
                 type: mongoose.Schema.ObjectId,
                 ref: 'Product',
-                required,
+                required: true,
             },
         },
     ],
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required,
+        required: true,
     },
     paymentInfo: {
         id: {
             type: String,
-            required,
+            required: true,
         },
         status: {
             type: String,
-            required,
+            required: true,
         },
         paidAt: {
             type: Date,
-            required,
         },
         itemsPrice: {
             type: Number,
             default: 0,
-            required,
+            required: true,
         },
         taxPrice: {
             type: Number,
             default: 0,
-            required,
+            required: true,
         },
         shipppingCost: {
             type: Number,
             default: 0,
-            required,
+            required: true,
         },
         totalPrice: {
             type: Number,
             default: 0,
-            required,
+            required: true,
         },
         orderStatus: {
             type: String,
-            required,
+            required: true,
             default: 'Processing',
         },
         deliverAt: Date,

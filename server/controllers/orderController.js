@@ -1,7 +1,8 @@
+const cacthAsyncError = require('../middleware/cacthAsyncError');
 const Order = require('../models/orderModel');
 
 // Create new Order
-exports.newOrder = catchAsyncErrors(async (req, res, next) => {
+exports.newOrder = cacthAsyncError(async (req, res, next) => {
     const {
         shippingInfo,
         orderItems,
