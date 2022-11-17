@@ -76,6 +76,14 @@ exports.getAllOrders = cacthAsyncError(async (req, res, next) => {
     });
 });
 
+const updateStock = async (id, quantity) => {
+    const product = await Product.findById(id);
+    product.stock -= quantity;
+    console.log(product);
+
+    await product.save({ validateBeforeSave: false });
+};
+
 // order status update by Admin
 exports.updateOrder = cacthAsyncError(async (req, res, next) => {
     const order = await Order.findById(req.params.id);
@@ -104,8 +112,6 @@ exports.updateOrder = cacthAsyncError(async (req, res, next) => {
         success: true,
     });
 });
-
-
 
 // delete Order -- Admin
 exports.deleteOrder = cacthAsyncError(async (req, res, next) => {
