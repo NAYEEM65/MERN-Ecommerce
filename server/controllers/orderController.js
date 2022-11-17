@@ -11,7 +11,7 @@ exports.newOrder = cacthAsyncError(async (req, res, next) => {
         paymentInfo,
         itemsPrice,
         taxPrice,
-        shippingCost,
+        shippingPrice,
         totalPrice,
     } = req.body;
 
@@ -21,7 +21,7 @@ exports.newOrder = cacthAsyncError(async (req, res, next) => {
         paymentInfo,
         itemsPrice,
         taxPrice,
-        shippingCost,
+        shippingPrice,
         totalPrice,
         paidAt: Date.now(),
         user: req.user._id,
@@ -62,7 +62,7 @@ exports.myOrders = cacthAsyncError(async (req, res, next) => {
 // get all Orders
 exports.getAllOrders = cacthAsyncError(async (req, res, next) => {
     const orders = await Order.find();
-
+    console.log(orders);
     let totalAmount = 0;
 
     orders.forEach((order) => {
@@ -73,5 +73,51 @@ exports.getAllOrders = cacthAsyncError(async (req, res, next) => {
         success: true,
         totalAmount,
         orders,
+    });
+});
+
+// order status update by Admin
+exports.updateOrder = cacthAsyncError(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        return next(new ErrorHandler('Order not found with this Id', 404));
+    }
+
+    if (order.orderStatus === 'Delivered') {
+        return next(new ErrorHandler('You have already delivered this order', 400));
+    }
+
+    if (req.body.status === 'Shipped') {
+        order.orderItems.forEach(async (ord) => {
+            await updateStock(ord.product, ord.quantity);
+        });
+    }
+    order.orderStatus = req.body.status;
+
+    if (req.body.status === 'Delivered') {
+        order.deliveredAt = Date.now();
+    }
+
+    await order.save({ validateBeforeSave: false });
+    res.status(200).json({
+        success: true,
+    });
+});
+
+
+
+// delete Order -- Admin
+exports.deleteOrder = cacthAsyncError(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+        return next(new ErrorHandler('Order not found with this Id', 404));
+    }
+
+    await order.remove();
+
+    res.status(200).json({
+        success: true,
     });
 });
