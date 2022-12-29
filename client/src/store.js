@@ -4,7 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { productReducer } from './redux/Reducers/productReducer';
 
 const reducer = combineReducers({
-    productReducer: productReducer,
+    products: productReducer,
 });
 
 const inititalState = {};

@@ -4,43 +4,54 @@ const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        maxlength: [30, 'name can not exceed 30 characters'],
-        minlenght: [4, 'name should be more than 4 characters'],
-    },
-    email: {
-        type: String,
-        required: [true, 'Please enter your email address'],
-        unique: true,
-        validate: [validator.isEmail, 'Please enter a valid email'],
-    },
-    password: {
-        type: String,
-        required: true,
-        maxlength: [50, 'password can not exceed 50 characters'],
-        minlength: [6, 'password should be more than 6 characters'],
-        select: false,
-    },
-    avatar: {
-        public_id: {
+const userSchema = new mongoose.Schema(
+    {
+        name: {
             type: String,
             required: true,
+            maxlength: [30, 'name can not exceed 30 characters'],
+            minlenght: [4, 'name should be more than 4 characters'],
         },
-        url: {
+        email: {
+            type: String,
+            required: [true, 'Please enter your email address'],
+            unique: true,
+            validate: [validator.isEmail, 'Please enter a valid email'],
+        },
+        password: {
             type: String,
             required: true,
+            maxlength: [50, 'password can not exceed 50 characters'],
+            minlength: [6, 'password should be more than 6 characters'],
+            select: false,
         },
+        history: {
+            type: Array,
+            default: [],
+        },
+        avatar: {
+            public_id: {
+                type: String,
+                required: true,
+            },
+            url: {
+                type: String,
+                required: true,
+            },
+        },
+        role: {
+            type: String,
+            default: 'user',
+        },
+        about: {
+            type: String,
+            trim: true,
+        },
+        resetPasswordToken: String,
+        resetPasswordTokenExpires: Date,
     },
-    role: {
-        type: String,
-        default: 'user',
-    },
-    resetPasswordToken: String,
-    resetPasswordTokenExpires: Date,
-});
+    { timestamps: true },
+);
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();

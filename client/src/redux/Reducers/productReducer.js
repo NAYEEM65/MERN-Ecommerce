@@ -19,7 +19,7 @@ export const productReducer = (state = initialState, action) => {
         case ALL_PRODUCT_SUCCESS:
             return {
                 loading: false,
-                product: action.payload.products,
+                products: action.payload.products,
                 productsCount: action.payload.productsCount,
             };
 
@@ -30,8 +30,9 @@ export const productReducer = (state = initialState, action) => {
             };
         case CLEAR_ERROR:
             return {
-                loading: false,
-                error: '',
+                ...state,
+
+                error: null,
             };
 
         default:
