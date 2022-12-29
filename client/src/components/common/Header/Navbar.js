@@ -25,7 +25,7 @@ const Navbar = () => {
         },
     ];
     const [isOpen, setOpen] = useState(false);
-    console.log(isOpen);
+
     return (
         <nav className="bg-gray-200 shadow shadow-gray-300 w-100 px-8 md:px-auto">
             <div className="md:h-16 h-28 mx-auto md:px-4 container md:flex items-center hidden justify-between flex-wrap md:flex-nowrap">
@@ -49,7 +49,11 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="order-2 md:order-3">
-                    <button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
+                    <button
+                        data-mdb-ripple="true"
+                        data-mdb-ripple-color="light"
+                        className="flex justify-between items-center px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5"
@@ -89,7 +93,11 @@ const Navbar = () => {
                                     </li>
                                 ))}
                                 <li>
-                                    <button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
+                                    <button
+                                        data-mdb-ripple="true"
+                                        data-mdb-ripple-color="light"
+                                        className="flex justify-between items-center px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                                    >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-5 w-5"

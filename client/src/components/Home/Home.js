@@ -1,10 +1,13 @@
 import React from 'react';
+import Banner from '../common/Header/Banner';
 import Layout from '../layout/Layout';
+import Products from '../Products/Products';
 
 const Home = () => {
     return (
         <Layout>
-            <h1 className="text-red-500 text-3xl text-center">This is Home</h1>
+            <Banner />
+            <Products />
         </Layout>
     );
 };
